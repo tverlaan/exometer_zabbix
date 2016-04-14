@@ -5,7 +5,8 @@
 
 A [Zabbix](http://www.zabbix.com) reporter backend for exometer_core. This repo also contains an Elixir behaviour for reporters to have less boilerplate in the actual reporter.
 
-*IMPORTANT*
+__IMPORTANT__
+
 For now you need to override `meck` and `edown` in your `mix.exs`:
 ```elixir
 {:meck, "~> 0.8.2", override: true },
