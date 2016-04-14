@@ -52,7 +52,7 @@ config :exometer_core,
 
 ## Usage
 
-The zabbix hostname is taken from the configuration. Each metric will be send as if it belongs to that host.
+The zabbix hostname is taken from the configuration. Each metric will be sent as if it belongs to that host.
 
 Metrics in exometer are noted by a list of atoms. Each metric has one or more datapoints. Zabbix keys are generated using the metric name and each individual datapoint.
 Eg. `[:erlang, :memory]` with datapoints `[:atom, :total]` becomes `erlang.memory.atom` and `erlang.memory.total`.
