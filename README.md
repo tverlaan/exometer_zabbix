@@ -5,13 +5,20 @@
 
 A [Zabbix](http://www.zabbix.com) reporter backend for exometer_core. This repo also contains an Elixir behaviour for reporters to have less boilerplate in the actual reporter.
 
+*IMPORTANT*
+For now you need to override `meck` and `edown` in your `mix.exs`:
+```elixir
+{:meck, "~> 0.8.2", override: true },
+{:edown, "~> 0.7", override: true }
+```
+
 ## Installation
 
 The package can be installed as:
 
   1. Add exometer_zabbix to your list of dependencies in `mix.exs`:
 
-```
+```elixir
 def deps do
   [
     {:exometer_zabbix, "~> 0.0.1"},
@@ -22,7 +29,7 @@ end
 
   2. Ensure exometer_zabbix is started before your application:
 
-```
+```elixir
 def application do
   [applications: [:exometer_zabbix]]
 end
@@ -30,7 +37,7 @@ end
 
   3. Configure exometer_zabbix
 
-```
+```elixir
 config :exometer_core,
   report: [
     reporters: [
@@ -53,7 +60,7 @@ Add items to zabbix with type `trapper`. More info [here](https://www.zabbix.com
 
 ## Configuration example
 
-```
+```elixir
 config :exometer_core,
   predefined: [
     { [:erlang, :memory], {:function, :erlang, :memory, [], :proplist, [:atom, :binary, :ets, :processes, :total]}, [] },
