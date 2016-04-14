@@ -33,7 +33,10 @@ defmodule ExometerZabbix.Mixfile do
       {:exometer_core, github: "Feuerlabs/exometer_core", ref: "5fdd9426713a3c26cae32f644a3120711b1cdb64" },
       {:poison, "~> 1.5 or ~> 2.0"},
       {:meck, "~> 0.8.2", override: true },
-      {:edown, "~> 0.7", override: true }
+      {:edown, "~> 0.7", override: true },
+
+      {:earmark, "~> 0.2", only: :docs},
+      {:ex_doc, "~> 0.11", only: :docs},
     ]
   end
 
