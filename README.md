@@ -22,7 +22,7 @@ The package can be installed as:
 ```elixir
 def deps do
   [
-    {:exometer_zabbix, "~> 0.0.2"},
+    {:exometer_zabbix, "~> 0.0.2"}, # check hex badge at the top for latest version
     {:exometer_zabbix, github: "tverlaan/exometer_zabbix"}
   ]
 end
