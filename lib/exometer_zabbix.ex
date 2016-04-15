@@ -115,14 +115,14 @@ defmodule Exometer.Report.Zabbix do
   # create a zabbix entry with a timestamp
   defp zbx_object(hostname, key, value, true) do
     zbx_object(hostname, key, value, false)
-    |> Map.put(:clock, "#{:erlang.system_time(:seconds)}")
+    |> Map.put(:clock, :erlang.system_time(:seconds))
   end
 
   # construct a zabbix message
   defp zbx_construct_message(data) do
     %{  request: "sender data",
         data: data,
-        clock: "#{:erlang.system_time(:seconds)}"
+        clock: :erlang.system_time(:seconds)
       }
     |> Poison.encode!
   end
