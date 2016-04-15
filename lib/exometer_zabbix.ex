@@ -109,7 +109,7 @@ defmodule Exometer.Report.Zabbix do
 
   # create a zabbix entry without a timestamp
   defp zbx_object(hostname, key, value, false) do
-    %{hostname: hostname, key: key, value: "#{value}"}
+    %{host: hostname, key: key, value: "#{value}"}
   end
 
   # create a zabbix entry with a timestamp
