@@ -1,7 +1,6 @@
 # Exometer Zabbix Reporter
 
 [![Build Status](https://travis-ci.org/tverlaan/exometer_zabbix.svg?branch=master)](https://travis-ci.org/tverlaan/exometer_zabbix)
-[![Hex.pm Version](http://img.shields.io/hexpm/v/exometer_zabbix.svg?style=flat)](https://hex.pm/packages/exometer_zabbix)
 
 A [Zabbix](http://www.zabbix.com) reporter backend for exometer_core. This repo also contains an Elixir behaviour for reporters to have less boilerplate in the actual reporter.
 
@@ -21,21 +20,12 @@ The package can be installed as:
 ```elixir
 def deps do
   [
-    {:exometer_zabbix, "~> x.x.x"}, # check hex badge at the top for latest version
     {:exometer_zabbix, github: "tverlaan/exometer_zabbix"}
   ]
 end
 ```
 
-  2. Ensure exometer_zabbix is started before your application:
-
-```elixir
-def application do
-  [applications: [:exometer_zabbix]]
-end
-```
-
-  3. Configure exometer_zabbix
+  2. Configure exometer_zabbix
 
 ```elixir
 config :exometer_core,
