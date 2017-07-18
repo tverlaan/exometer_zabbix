@@ -7,10 +7,9 @@ A [Zabbix](http://www.zabbix.com) reporter backend for exometer_core. This repo 
 
 __IMPORTANT__
 
-For now you need to override `meck` and `edown` in your `mix.exs`:
+For now you need to override `meck` in your `mix.exs`:
 ```elixir
-{:meck, "~> 0.8.2", override: true },
-{:edown, "~> 0.7", override: true }
+{:meck, "~> 0.8.2", override: true }
 ```
 
 ## Installation
@@ -22,7 +21,7 @@ The package can be installed as:
 ```elixir
 def deps do
   [
-    {:exometer_zabbix, "~> 0.0.2"}, # check hex badge at the top for latest version
+    {:exometer_zabbix, "~> x.x.x"}, # check hex badge at the top for latest version
     {:exometer_zabbix, github: "tverlaan/exometer_zabbix"}
   ]
 end
