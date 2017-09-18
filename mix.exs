@@ -30,12 +30,11 @@ defmodule ExometerZabbix.Mixfile do
   # Type "mix help deps" for more examples and options
   defp deps do
     [
-      {:exometer_core, git: "git://github.com/Feuerlabs/exometer_core.git", ref: "master", manager: :rebar },
+      {:exometer_core, "~> 1.5" },
       {:poison, "~> 2.0 or ~> 3.0"},
-      {:meck, "~> 0.8.2", override: true},
 
-      {:earmark, "~> 1.2", only: :docs},
-      {:ex_doc, "~> 0.16", only: :docs},
+      {:earmark, "~> 1.2", only: :dev, runtime: false},
+      {:ex_doc, "~> 0.16", only: :dev, runtime: false},
     ]
   end
 

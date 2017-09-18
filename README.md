@@ -1,15 +1,9 @@
 # Exometer Zabbix Reporter
 
 [![Build Status](https://travis-ci.org/tverlaan/exometer_zabbix.svg?branch=master)](https://travis-ci.org/tverlaan/exometer_zabbix)
+[![Hex.pm Version](http://img.shields.io/hexpm/v/exometer_zabbix.svg?style=flat)](https://hex.pm/packages/exometer_zabbix)
 
 A [Zabbix](http://www.zabbix.com) reporter backend for exometer_core. This repo also contains an Elixir behaviour for reporters to have less boilerplate in the actual reporter.
-
-__IMPORTANT__
-
-For now you need to override `meck` in your `mix.exs`:
-```elixir
-{:meck, "~> 0.8.2", override: true }
-```
 
 ## Installation
 
@@ -20,7 +14,7 @@ The package can be installed as:
 ```elixir
 def deps do
   [
-    {:exometer_zabbix, github: "tverlaan/exometer_zabbix"}
+    {:exometer_zabbix, "~> 0.1"} # see Hex version at the top
   ]
 end
 ```
@@ -74,7 +68,3 @@ config :exometer_core,
     ]
   ]
 ```
-
-## TODO
-
-Clean up dependency overrides (depends on upstream)
