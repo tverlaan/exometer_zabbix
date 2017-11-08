@@ -95,6 +95,21 @@ defmodule Exometer.Report.Zabbix do
   end
   def exometer_info(_, state), do: {:noreply, state}
 
+  @doc """
+  Exometer callback for handling new subscription
+  """
+  @spec exometer_subscribe(:exometer_report.metric,
+                           :exometer_report.datapoint,
+                           :exometer_report.interval,
+                           :exometer_report.extra,
+                           __MODULE__.t
+                        ) :: {:ok, __MODULE__.t}
+  def exometer_subscribe(metric, datapoint, interval, extra, %__MODULE__{host: host, port: port} = state) do
+    key = zbx_key(metric, datapoint)
+    IO.puts("### ZABBIX SUBSCRIBE (#{host}:#{port}): #{key} / #{interval} / #{extra}")
+    {:ok, state}
+  end
+
   # send_after when batch is empty
   defp batch_send(bws, []) do
     Process.send_after self(), {:zabbix, :send}, bws

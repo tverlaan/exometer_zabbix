@@ -16,7 +16,15 @@ defmodule ExometerZabbix.Mixfile do
   #
   # Type "mix help compile.app" for more information
   def application do
-    [applications: [:logger, :exometer_core]]
+    [
+      mod: {Exometer.Report.Zabbix.App, []},
+      applications: [:logger, :exometer_core],
+      env: [
+	rpcurl: "http://127.0.0.1/api_jsonrpc.php",
+	rpcuser: "admin",
+	rpcpassword: "admin"
+      ]
+    ]
   end
 
   # Dependencies can be Hex packages:
@@ -30,7 +38,7 @@ defmodule ExometerZabbix.Mixfile do
   # Type "mix help deps" for more examples and options
   defp deps do
     [
-      {:exometer_core, "~> 1.5" },
+      {:exometer_core, github: "Feuerlabs/exometer_core"},
       {:poison, "~> 2.0 or ~> 3.0"},
 
       {:earmark, "~> 1.2", only: :dev, runtime: false},
