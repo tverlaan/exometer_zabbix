@@ -1,4 +1,4 @@
-defmodule Zabbix do
+defmodule Exometer.Report.Zabbix.Rpc do
   @moduledoc """
   Zabbix JSON-RPC wrapper
   """

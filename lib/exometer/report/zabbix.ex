@@ -5,10 +5,8 @@ defmodule Exometer.Report.Zabbix do
   your data is being sent.
   """
   use Exometer.Report
-
-  # Zabbix protocol definitions
-  @zbx_header "ZBXD"
-  @zbx_protocol_version 1
+  alias Exometer.Report.Zabbix.Utils
+  alias Exometer.Report.Zabbix.Server
 
   # Default application values
   @host "127.0.0.1"
@@ -22,9 +20,10 @@ defmodule Exometer.Report.Zabbix do
     hostname: String.t,
     timestamping: boolean,
     batch_window_size: Integer.t,
-    data: List.t
+    data: List.t,
+    create_items: boolean
   }
-  defstruct [:host, :port, :hostname, :timestamping, :batch_window_size, :data]
+  defstruct [:host, :port, :hostname, :timestamping, :batch_window_size, :data, :create_items]
 
   @doc """
   Initialize a zabbix reporter for exometer
@@ -36,13 +35,15 @@ defmodule Exometer.Report.Zabbix do
     timestamping = Keyword.get(opts, :timestamping, @timestamping)
     batch_window_size = Keyword.get(opts, :batch_window_size, @batch_window_size)
     hostname = Keyword.get(opts, :hostname, "")
+    create_items = Keyword.get(opts, :create_items, false)
 
     {:ok, %__MODULE__{  host: host,
                         port: port,
                         hostname: hostname,
                         timestamping: timestamping,
                         batch_window_size: batch_window_size,
-                        data: []
+                        data: [],
+			create_items: create_items
                       }}
   end
 
@@ -57,14 +58,12 @@ defmodule Exometer.Report.Zabbix do
                         ) :: {:ok, __MODULE__.t}
   def exometer_report(metric, datapoint, _extra, value,
                       %__MODULE__{batch_window_size: 0, timestamping: ts,
-                                  hostname: hostname} = state) do
+                                  hostname: hostname, host: host, port: port} = state) do
 
-    key = zbx_key(metric, datapoint)
+    key = Utils.key(metric, datapoint)
 
-    [zbx_object(hostname, key, value, ts)]
-    |> zbx_construct_message
-    |> zbx_prepend_header
-    |> zbx_send(state)
+    [Server.entry(hostname, key, value, ts)] |>
+    Server.send(host, port)
 
     {:ok, state}
   end
@@ -73,8 +72,8 @@ defmodule Exometer.Report.Zabbix do
                       %__MODULE__{batch_window_size: bws, timestamping: ts,
                                   hostname: hostname, data: data} = state) do
 
-    key = zbx_key(metric, datapoint)
-    obj = zbx_object(hostname, key, value, ts)
+    key = Utils.key(metric, datapoint)
+    obj = Server.entry(hostname, key, value, ts)
 
     batch_send(bws, data)
 
@@ -85,11 +84,9 @@ defmodule Exometer.Report.Zabbix do
   Exometer callback for generic messages
   """
   @spec exometer_info(msg :: term, __MODULE__.t) :: {:ok, __MODULE__.t}
-  def exometer_info({:zabbix, :send}, %__MODULE__{data: data} = state) do
-    data
-    |> zbx_construct_message
-    |> zbx_prepend_header
-    |> zbx_send(state)
+  def exometer_info({:zabbix, :send}, %__MODULE__{host: host, port: port, data: data} = state) do
+    data |>
+      Server.send(host, port)
 
     {:ok, %__MODULE__{ state | data: []} }
   end
@@ -104,8 +101,12 @@ defmodule Exometer.Report.Zabbix do
                            :exometer_report.extra,
                            __MODULE__.t
                         ) :: {:ok, __MODULE__.t}
+  def exometer_subscribe(_metric, _datapoint, _interval, _extra, %__MODULE__{create_items: false} = state) do
+    {:ok, state}
+  end
   def exometer_subscribe(metric, datapoint, interval, extra, %__MODULE__{host: host, port: port} = state) do
-    key = zbx_key(metric, datapoint)
+    key = Utils.key(metric, datapoint)
+    #:ok = zbx_ensure_tmpl(zbx_tmpl(metric))
     IO.puts("### ZABBIX SUBSCRIBE (#{host}:#{port}): #{key} / #{interval} / #{extra}")
     {:ok, state}
   end
@@ -115,55 +116,4 @@ defmodule Exometer.Report.Zabbix do
     Process.send_after self(), {:zabbix, :send}, bws
   end
   defp batch_send(_, _), do: :ok
-
-  # generate zabbix key from metric + datapoint
-  defp zbx_key(metric, dp) do
-    metric ++ [dp]
-    |> Enum.join(".")
-  end
-
-  # create a zabbix entry without a timestamp
-  defp zbx_object(hostname, key, value, false) do
-    %{host: hostname, key: key, value: "#{value}"}
-  end
-
-  # create a zabbix entry with a timestamp
-  defp zbx_object(hostname, key, value, true) do
-    zbx_object(hostname, key, value, false)
-    |> Map.put(:clock, :erlang.system_time(:seconds))
-  end
-
-  # construct a zabbix message
-  defp zbx_construct_message(data) do
-    %{  request: "sender data",
-        data: data,
-        clock: :erlang.system_time(:seconds)
-      }
-    |> Poison.encode!
-  end
-
-  # add zabbix specific header to the message
-  defp zbx_prepend_header(msg) do
-    <<@zbx_header :: binary,
-      @zbx_protocol_version,
-      byte_size(msg) :: little-integer-size(64),
-      msg :: binary>>
-  end
-
-  # send a message to zabbix, we connect for each send action since the server doesn't allow
-  # to keep the connection open
-  defp zbx_send(msg, %__MODULE__{host: host, port: port}) do
-    {:ok, sock} = :gen_tcp.connect('#{host}', port, [active: false])
-    :ok = :gen_tcp.send sock, msg
-
-    # we need to add some error validation
-    :gen_tcp.recv(sock, 0)
-    |> case do
-        {:ok, resp} -> resp
-        _ = err -> err
-      end
-
-    :gen_tcp.close sock
-  end
-
 end
