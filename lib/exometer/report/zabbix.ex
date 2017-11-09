@@ -7,6 +7,7 @@ defmodule Exometer.Report.Zabbix do
   use Exometer.Report
   alias Exometer.Report.Zabbix.Utils
   alias Exometer.Report.Zabbix.Server
+  alias Exometer.Report.Zabbix.Rpc
 
   # Default application values
   @host "127.0.0.1"
@@ -30,12 +31,16 @@ defmodule Exometer.Report.Zabbix do
   """
   @spec exometer_init(opts :: term) :: __MODULE__.t
   def exometer_init(opts) do
+    create_items = Keyword.get(opts, :create_items, false)
+    if create_items do
+      {:ok, _} = Rpc.start_link(opts)
+    end
+    
     host = Keyword.get(opts, :host, @host)
     port = Keyword.get(opts, :port, @port)
     timestamping = Keyword.get(opts, :timestamping, @timestamping)
     batch_window_size = Keyword.get(opts, :batch_window_size, @batch_window_size)
     hostname = Keyword.get(opts, :hostname, "")
-    create_items = Keyword.get(opts, :create_items, false)
 
     {:ok, %__MODULE__{  host: host,
                         port: port,
@@ -104,10 +109,9 @@ defmodule Exometer.Report.Zabbix do
   def exometer_subscribe(_metric, _datapoint, _interval, _extra, %__MODULE__{create_items: false} = state) do
     {:ok, state}
   end
-  def exometer_subscribe(metric, datapoint, interval, extra, %__MODULE__{host: host, port: port} = state) do
-    key = Utils.key(metric, datapoint)
-    #:ok = zbx_ensure_tmpl(zbx_tmpl(metric))
-    IO.puts("### ZABBIX SUBSCRIBE (#{host}:#{port}): #{key} / #{interval} / #{extra}")
+  def exometer_subscribe(metric, datapoint, interval, _extra, %__MODULE__{} = state) do
+    {:ok, _item_id} = Rpc.ensure_item(metric, datapoint, interval / 1000)
+    
     {:ok, state}
   end
 

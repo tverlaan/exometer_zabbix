@@ -16,15 +16,7 @@ defmodule ExometerZabbix.Mixfile do
   #
   # Type "mix help compile.app" for more information
   def application do
-    [
-      mod: {Exometer.Report.Zabbix.App, []},
-      applications: [:logger, :exometer_core],
-      env: [
-	rpcurl: "http://127.0.0.1/api_jsonrpc.php",
-	rpcuser: "admin",
-	rpcpassword: "admin"
-      ]
-    ]
+    [applications: [:logger, :exometer_core]]
   end
 
   # Dependencies can be Hex packages:
