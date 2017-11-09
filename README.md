@@ -40,7 +40,18 @@ The zabbix hostname is taken from the configuration. Each metric will be sent as
 Metrics in exometer are noted by a list of atoms. Each metric has one or more datapoints. Zabbix keys are generated using the metric name and each individual datapoint.
 Eg. `[:erlang, :memory]` with datapoints `[:atom, :total]` becomes `erlang.memory.atom` and `erlang.memory.total`.
 
-Add items to zabbix with type `trapper`. More info [here](https://www.zabbix.com/documentation/2.4/manual/config/items/itemtypes/trapper).
+Items must be declared in zabbix, of type `trapper`. More info [here](https://www.zabbix.com/documentation/2.4/manual/config/items/itemtypes/trapper).
+
+`exometer_zabbix` can creates the items for you. You must then add the following options in `exometer_zabbix` configuration:
+
+```elixir
+      'Elixir.Exometer.Report.Zabbix': [
+		create_items: true,
+	    rpcurl: "http://127.0.0.1/api_jsonrpc.php",
+		rpcuser: "Admin",
+		rpcpassword: "zabbix"
+      ]
+```
 
 ## Configuration example
 
