@@ -47,9 +47,22 @@ Items must be declared in zabbix, of type `trapper`. More info [here](https://ww
 ```elixir
       'Elixir.Exometer.Report.Zabbix': [
 		create_items: true,
-	    rpcurl: "http://127.0.0.1/api_jsonrpc.php",
+        rpcurl: "http://127.0.0.1/api_jsonrpc.php",
 		rpcuser: "Admin",
 		rpcpassword: "zabbix"
+      ]
+```
+
+Each item is associated with a template and an application associated with this template. 
+Template and application names can be customized by specifying functions which takes as input 
+the metric. Template must be associated with a parent template whose id can also be
+customized.
+
+```elixir
+      'Elixir.Exometer.Report.Zabbix': [
+	    tmpl_parent_id: 11,
+		tmpl_formatter: &MyModule.template/1,
+		app_formatter: &MyModule.application/1
       ]
 ```
 
