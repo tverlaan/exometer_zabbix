@@ -138,7 +138,7 @@ defmodule Exometer.Report.Zabbix.Rpc do
 	    {:error, reason}
 	end
 	
-      {:ok, [ %{ "itemid" => item_id } ]} ->
+      {:ok, [ %{ "itemid" => item_id } | _ ]} ->
 	{:ok, item_id}
     end
   end
