@@ -24,8 +24,8 @@ defmodule Exometer.Report.Zabbix.Rpc do
     GenServer.start_link(__MODULE__, opts, name: __MODULE__)
   end
 
-  def ensure_item(metric, dp, delay) do
-    GenServer.call(__MODULE__, {:ensure_metric, metric, dp, delay})
+  def ensure_item(metric, dp, delay, extra) do
+    GenServer.call(__MODULE__, {:ensure_metric, metric, dp, delay, extra})
   end
 
   ###
@@ -46,10 +46,10 @@ defmodule Exometer.Report.Zabbix.Rpc do
     do_connect(user, password, s)
   end
 
-  def handle_call({:ensure_metric, metric, dp, delay}, _from, s) do
+  def handle_call({:ensure_metric, metric, dp, delay, extra}, _from, s) do
     with {:ok, tmpl_id} <- do_template_id(metric, s),
 	 {:ok, _app_id} <- do_application_id(metric, tmpl_id, s),
-	 {:ok, item_id} <- do_item_id(metric, dp, delay, tmpl_id, s) do
+	 {:ok, item_id} <- do_item_id(metric, dp, delay, tmpl_id, extra, s) do
       {:reply, {:ok, item_id}, s}
     else
       {:error, reason} ->
@@ -116,19 +116,22 @@ defmodule Exometer.Report.Zabbix.Rpc do
     end
   end
 
-  defp do_item_id(metric, dp, delay, tmpl_id, s) do
+  defp do_item_id(metric, dp, delay, tmpl_id, extra, s) do
     key = Utils.key(metric, dp)
     params = %{ "search" => %{ "key_" => key } }
+    value_type = Keyword.get_lazy(extra, :type, fn -> Utils.infer_type(metric, dp) end)
+    name = Keyword.get_lazy(extra, :name, fn -> "Exometer #{key}" end)
     case rpc_call("item.get", params, s) do
       {:ok, []} ->
 	params = %{ "delay" => delay,
 		    "hostid" => tmpl_id,
 		    "key_" => key,
-		    "name" => "Exometer #{key}",
+		    "name" => name,
 		    "type" => @zbx_type_trapper,
-		    "value_type" => Utils.infer_type(metric, dp),
+		    "value_type" => Utils.to_zbx_type(value_type),
 		    "trapper_hosts" => ""
 		  }
+	Logger.debug("[ZBX] Creating item: #{inspect params}")
 	case rpc_call("item.create", params, s) do
 	  {:ok, %{ "itemids" => [ item_id ] }} ->
 	    Logger.info("[ZBX] Item '#{key}' created succesfully")

@@ -109,8 +109,8 @@ defmodule Exometer.Report.Zabbix do
   def exometer_subscribe(_metric, _datapoint, _interval, _extra, %__MODULE__{create_items: false} = state) do
     {:ok, state}
   end
-  def exometer_subscribe(metric, datapoint, interval, _extra, %__MODULE__{} = state) do
-    {:ok, _item_id} = Rpc.ensure_item(metric, datapoint, interval / 1000)
+  def exometer_subscribe(metric, datapoint, interval, extra, %__MODULE__{} = state) do
+    {:ok, _item_id} = Rpc.ensure_item(metric, datapoint, interval / 1000, extra)
     
     {:ok, state}
   end

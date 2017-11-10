@@ -2,6 +2,8 @@ defmodule Exometer.Report.Zabbix.Server do
   @moduledoc """
   Wrapper for Zabbix server
   """
+  require Logger
+  
   # Zabbix protocol definitions
   @zbx_header "ZBXD"
   @zbx_protocol_version 1
@@ -58,7 +60,7 @@ defmodule Exometer.Report.Zabbix.Server do
     |> case do
         {:ok, resp} -> resp
         _ = err -> err
-      end
+       end
 
     :gen_tcp.close sock
   end

@@ -66,6 +66,17 @@ customized.
       ]
 ```
 
+Items can be customized with `extra` argument of subscriptions. For instance:
+```elixir
+      {Exometer.Report.Zabbix, [:erlang, :memory], :atom, 1_000, true, [
+        type: :zbx_type_unsigned, name: "Erlang memory (atom #)"
+      ]}
+```
+
+* `type` is one of Zabix value types: `:zbx_type_float`, `:zbx_type_character`, `:zbx_type_log`, 
+`:zbx_type_unsigned` or `:zbx_type_text`.
+* `name`: is the name of the item (default: "Exomeeter <key>")
+
 ## Configuration example
 
 ```elixir

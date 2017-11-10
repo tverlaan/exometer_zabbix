@@ -40,10 +40,19 @@ defmodule Exometer.Report.Zabbix.Utils do
   """
   def infer_type(metric, dp) do
     case Exometer.get_value(metric, dp) do
-      v when is_float(v) -> @zbx_type_float
-      v when is_integer(v) and v >= 0 -> @zbx_type_unsigned
-      v when is_integer(v) -> @zbx_type_float
-      _ -> @zbx_type_text
+      v when is_float(v) -> :zbx_type_float
+      v when is_integer(v) and v >= 0 -> :zbx_type_unsigned
+      v when is_integer(v) -> :zbx_type_float
+      _ -> :zbx_type_text
     end
   end
+
+  @doc """
+  Convert atom to zabbix type
+  """
+  def to_zbx_type(:zbx_type_float),     do: @zbx_type_float
+  def to_zbx_type(:zbx_type_character), do: @zbx_type_character
+  def to_zbx_type(:zbx_type_log),       do: @zbx_type_log
+  def to_zbx_type(:zbx_type_unsigned),  do: @zbx_type_unsigned
+  def to_zbx_type(:zbx_type_text),      do: @zbx_type_text
 end
