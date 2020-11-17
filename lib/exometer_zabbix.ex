@@ -124,7 +124,7 @@ defmodule Exometer.Report.Zabbix do
         data: data,
         clock: :erlang.system_time(:seconds)
       }
-    |> Poison.encode!
+    |> Jason.encode!
   end
 
   # add zabbix specific header to the message
