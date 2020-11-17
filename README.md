@@ -1,7 +1,6 @@
 # Exometer Zabbix Reporter
 
-[![Build Status](https://travis-ci.org/tverlaan/exometer_zabbix.svg?branch=master)](https://travis-ci.org/tverlaan/exometer_zabbix)
-[![Hex.pm Version](https://img.shields.io/hexpm/v/exometer_zabbix.svg?style=flat)](https://hex.pm/packages/exometer_zabbix)
+[![Hex.pm Version](https://img.shields.io/hexpm/v/exometer_zabbix.svg?style=flat)](https://hex.pm/packages/exometer_zabbix) [![CI Status](https://github.com/tverlaan/exometer_zabbix/workflows/CI/badge.svg?branch=master)](https://github.com/tverlaan/exometer_zabbix/actions)
 
 A [Zabbix](http://www.zabbix.com) reporter backend for exometer_core. This repo also contains an Elixir behaviour for reporters to have less boilerplate in the actual reporter.
 
