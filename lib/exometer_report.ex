@@ -14,60 +14,70 @@ defmodule Exometer.Report do
   @doc """
   Invoked when a metric is being reported as part of a subscription
   """
-  @callback exometer_report(  :exometer_report.metric(),
-                              :exometer_report.datapoint(),
-                              :exometer_report.extra(),
-                              value :: term,
-                              state
-                            ) :: callback_result
+  @callback exometer_report(
+              :exometer_report.metric(),
+              :exometer_report.datapoint(),
+              :exometer_report.extra(),
+              value :: term,
+              state
+            ) :: callback_result
 
   @doc """
   Invoked when reporter is being subscribed to a metric
   """
-  @callback exometer_subscribe( :exometer_report.metric(),
-                                :exometer_report.datapoint(),
-                                :exometer_report.interval(),
-                                :exometer_report.extra(),
-                                state
-                              ) :: callback_result
+  @callback exometer_subscribe(
+              :exometer_report.metric(),
+              :exometer_report.datapoint(),
+              :exometer_report.interval(),
+              :exometer_report.extra(),
+              state
+            ) :: callback_result
 
   @doc """
   Invoked when reporter is being unsubscribed from a metric
   """
-  @callback exometer_unsubscribe( :exometer_report.metric(),
-                                  :exometer_report.datapoint(),
-                                  :exometer_report.extra(),
-                                  state
-                                ) :: callback_result
+  @callback exometer_unsubscribe(
+              :exometer_report.metric(),
+              :exometer_report.datapoint(),
+              :exometer_report.extra(),
+              state
+            ) :: callback_result
 
   @doc false
-  @callback exometer_call(  msg :: term,
-                            pid,
-                            state
-                          ) :: callback_result
+  @callback exometer_call(
+              msg :: term,
+              pid,
+              state
+            ) :: callback_result
 
   @doc false
-  @callback exometer_cast(  msg :: term,
-                            state
-                          ) :: callback_result
+  @callback exometer_cast(
+              msg :: term,
+              state
+            ) :: callback_result
 
   @doc false
-  @callback exometer_info(  msg :: term,
-                            state
-                          ) :: callback_result
+  @callback exometer_info(
+              msg :: term,
+              state
+            ) :: callback_result
 
   @doc false
-  @callback exometer_newentry(  :exometer.entry(),
-                                state ) :: callback_result
+  @callback exometer_newentry(
+              :exometer.entry(),
+              state
+            ) :: callback_result
 
   @doc false
-  @callback exometer_setopts( :exometer_report.metric(),
-                              opts :: term
-                            ) :: callback_result
+  @callback exometer_setopts(
+              :exometer_report.metric(),
+              opts :: term
+            ) :: callback_result
   @doc false
-  @callback exometer_terminate( opts :: term,
-                                state
-                              ) :: callback_result
+  @callback exometer_terminate(
+              opts :: term,
+              state
+            ) :: callback_result
 
   @doc false
   defmacro __using__(_) do
@@ -114,11 +124,14 @@ defmodule Exometer.Report do
         :ignore
       end
 
-      defoverridable [exometer_call: 3, exometer_cast: 2, exometer_info: 2,
-                      exometer_newentry: 2, exometer_setopts: 4,
-                      exometer_terminate: 2, exometer_subscribe: 5,
-                      exometer_unsubscribe: 4]
+      defoverridable exometer_call: 3,
+                     exometer_cast: 2,
+                     exometer_info: 2,
+                     exometer_newentry: 2,
+                     exometer_setopts: 4,
+                     exometer_terminate: 2,
+                     exometer_subscribe: 5,
+                     exometer_unsubscribe: 4
     end
   end
-
 end
