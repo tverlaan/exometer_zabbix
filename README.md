@@ -13,7 +13,7 @@ The package can be installed as:
 ```elixir
 def deps do
   [
-    {:exometer_zabbix, "~> 0.1"} # see Hex version at the top
+    {:exometer_zabbix, "~> 1.0"} # see Hex version at the top
   ]
 end
 ```

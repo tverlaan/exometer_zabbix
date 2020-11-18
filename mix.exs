@@ -1,15 +1,19 @@
 defmodule ExometerZabbix.Mixfile do
   use Mix.Project
 
+  @version "1.0.0"
+  @url "https://github.com/tverlaan/exometer_zabbix"
+
   def project do
     [
       app: :exometer_zabbix,
-      version: "0.1.0",
+      version: @version,
       elixir: "~> 1.8",
       build_embedded: Mix.env() == :prod,
       start_permanent: Mix.env() == :prod,
-      description: description(),
+      description: "A Zabbix reporter backend for exometer_core",
       package: package(),
+      docs: docs(),
       deps: deps()
     ]
   end
@@ -27,19 +31,19 @@ defmodule ExometerZabbix.Mixfile do
     ]
   end
 
-  defp description do
-    """
-    A Zabbix reporter backend for exometer_core
-    """
+  defp docs() do
+    [
+      main: "Exometer Zabbix Reporter",
+      source_ref: "v#{@version}",
+      source_url: @url
+    ]
   end
 
   defp package do
-    # These are the default files included in the package
     [
-      files: ["lib", "mix.exs", "README.md", "LICENSE.md"],
       maintainers: ["Timmo Verlaan"],
       licenses: ["MIT"],
-      links: %{"GitHub" => "https://github.com/tverlaan/exometer_zabbix"}
+      links: %{"GitHub" => @url}
     ]
   end
 end
