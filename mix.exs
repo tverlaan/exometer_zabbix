@@ -12,26 +12,14 @@ defmodule ExometerZabbix.Mixfile do
      deps: deps()]
   end
 
-  # Configuration for the OTP application
-  #
-  # Type "mix help compile.app" for more information
   def application do
-    [applications: [:logger, :exometer_core]]
+    [extra_applications: [:logger]]
   end
 
-  # Dependencies can be Hex packages:
-  #
-  #   {:mydep, "~> 0.3.0"}
-  #
-  # Or git/path repositories:
-  #
-  #   {:mydep, git: "https://github.com/elixir-lang/mydep.git", tag: "0.1.0"}
-  #
-  # Type "mix help deps" for more examples and options
   defp deps do
     [
       {:exometer_core, "~> 1.5" },
-      {:poison, "~> 2.0 or ~> 3.0"},
+      {:jason, "~> 1.0", runtime: false},
 
       {:earmark, "~> 1.2", only: :dev, runtime: false},
       {:ex_doc, "~> 0.16", only: :dev, runtime: false},
@@ -52,5 +40,4 @@ defmodule ExometerZabbix.Mixfile do
       links: %{"GitHub" => "https://github.com/tverlaan/exometer_zabbix"}
     ]
   end
-
 end
