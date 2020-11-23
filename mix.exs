@@ -18,10 +18,6 @@ defmodule ExometerZabbix.Mixfile do
     ]
   end
 
-  def application do
-    [extra_applications: [:logger]]
-  end
-
   defp deps do
     [
       {:exometer_core, "~> 1.5"},
