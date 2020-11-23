@@ -37,3 +37,5 @@ jobs:
       run: mix compile --warnings-as-errors
     - name: Format
       run: mix format --check-formatted
+    - name: Test
+      run: mix test --no-start
