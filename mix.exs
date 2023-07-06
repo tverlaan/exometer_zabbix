@@ -29,7 +29,7 @@ defmodule ExometerZabbix.Mixfile do
 
   defp docs() do
     [
-      main: "Exometer Zabbix Reporter",
+      main: "Exometer.Report.Zabbix",
       source_ref: "v#{@version}",
       source_url: @url
     ]
