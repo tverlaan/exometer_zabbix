@@ -22,22 +22,22 @@ defmodule ExometerZabbixTest do
   end
 
   test "reporting adds to batch", %{state: state} do
-    {:ok, %Zabbix{data: data}} = Zabbix.exometer_report([:foo], 'bar', :extra, 1, state)
+    {:ok, %Zabbix{data: data}} = Zabbix.exometer_report([:foo], ~c"bar", :extra, 1, state)
     assert %{clock: _, host: "", key: "foo.bar", value: "1"} = hd(data)
   end
 
   test "reporting with long metric works", %{state: state} do
     {:ok, %Zabbix{data: data}} =
-      Zabbix.exometer_report([:my, :metric, :name], 'bar', :extra, 1, state)
+      Zabbix.exometer_report([:my, :metric, :name], ~c"bar", :extra, 1, state)
 
     assert %{clock: _, host: "", key: "my.metric.name.bar", value: "1"} = hd(data)
   end
 
   test "reporting twice adds to batch", %{state: state} do
-    {:ok, new_state} = Zabbix.exometer_report([:foo], 'bar', :extra, 1, state)
+    {:ok, new_state} = Zabbix.exometer_report([:foo], ~c"bar", :extra, 1, state)
 
     {:ok, %Zabbix{data: data}} =
-      Zabbix.exometer_report([:base], 'datapoint', :extra, 2, new_state)
+      Zabbix.exometer_report([:base], ~c"datapoint", :extra, 2, new_state)
 
     assert length(data) == 2
 
@@ -51,7 +51,7 @@ defmodule ExometerZabbixTest do
     no_batch_state = %{state | batch_window_size: 0}
 
     {:ok, %Zabbix{data: data}} =
-      Zabbix.exometer_report([:my, :metric, :name], 'bar', :extra, 1, no_batch_state)
+      Zabbix.exometer_report([:my, :metric, :name], ~c"bar", :extra, 1, no_batch_state)
 
     assert data == []
 
@@ -75,10 +75,10 @@ defmodule ExometerZabbixTest do
     zbx_server(10052)
     state = %{state | port: 10052, batch_window_size: 50}
 
-    {:ok, new_state} = Zabbix.exometer_report([:my, :metric, :name], 'bar', :extra, 1, state)
+    {:ok, new_state} = Zabbix.exometer_report([:my, :metric, :name], ~c"bar", :extra, 1, state)
 
     {:ok, %Zabbix{data: data} = latest_state} =
-      Zabbix.exometer_report([:my, :metric, :name], 'bar', :extra, 2, new_state)
+      Zabbix.exometer_report([:my, :metric, :name], ~c"bar", :extra, 2, new_state)
 
     assert length(data) == 2
     zbx_batcher(latest_state)

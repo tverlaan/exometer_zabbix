@@ -145,7 +145,7 @@ defmodule Exometer.Report.Zabbix do
   # send a message to zabbix, we connect for each send action since the server doesn't allow
   # to keep the connection open
   defp zbx_send(msg, %__MODULE__{host: host, port: port}) do
-    {:ok, sock} = :gen_tcp.connect('#{host}', port, active: false)
+    {:ok, sock} = :gen_tcp.connect(~c"#{host}", port, active: false)
     :ok = :gen_tcp.send(sock, msg)
 
     # we need to add some error validation
